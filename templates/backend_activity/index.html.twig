@@ -1,0 +1,87 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}Hello BackendActivityController!{% endblock %}
+
+{% block body %}
+
+
+  <main class="main">
+
+      <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active">Activity</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+  
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Datatables</h5>
+              <p>l'admin dispose d'une interface intuitive lui permettant de gérer les activités publiées sur la plateforme..</p>
+
+              <!-- Table with stripped rows -->
+               <table style="width: 100%; table-layout: fixed;">
+                <thead>
+                  <tr>
+                    <th style="width: 15%;">ID</th>
+                    <th style="width: 15%;">Nom</th>
+                    <th style="width: 15%;">Description</th>
+                    <thstyle="width: 15%;">Image</th>
+                    <th class="text-center" style="width: 15%;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for activity in activities %}
+                      <tr>
+                          <td>{{ activity.id }}</td>
+                          <td>{{ activity.titre }}</td>
+                          <td>{{ activity.description }}</td>
+                          <td>
+                              {% if activity.imageFileName %}
+                                  <img src="{{ asset('uploads/' ~ activity.imageFileName) }}" alt="{{ activity.titre }}" width="100">
+                              {% else %}
+                                  Pas d'image
+                              {% endif %}
+                          </td>
+                          
+                          <td class="text-center">
+                 {#<a href="{{ path('app_activity_show', {'id': activity.id}) }}" class="btn btn-info btn-sm">Show</a>#}
+                <form action="{{ path('app_activity_delete', {'id': activity.id}) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this activity?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ activity.id) }}">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+
+            <td>
+          
+            {% if not activity.isApproved %}
+                <a href="{{ path('app_backend_activity_approve', { id: activity.id }) }}" class="btn btn-success">Approuver</a>
+            {% else %}
+                <span class="text-success">Approuvée</span>
+            {% endif %}
+        
+        </td>
+                      </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!--
+
+
+{% endblock %}
