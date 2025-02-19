@@ -1,0 +1,5 @@
+{% extends 'baseAdmin.html.twig' %}
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

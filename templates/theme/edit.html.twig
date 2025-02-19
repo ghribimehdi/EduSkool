@@ -1,0 +1,31 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}Modifier Theme{% endblock %}
+
+{% block body %}
+    
+    <!-- Form Start -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <h4 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius">Modifier Theme</h4>
+
+            <!-- Formulaire de modification du Theme -->
+            {% if form is defined %}
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                {{ form_widget(form) }}
+                <button type="submit" class="btn btn-primary mt-3">Sauvegarder les modifications</button>
+                {{ form_end(form) }}
+            {% else %}
+                <p>Erreur : le formulaire n'est pas disponible.</p>
+            {% endif %}
+
+            <!-- Retour à la liste des Themes -->
+            <a href="{{ path('app_theme_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+
+            <!-- Formulaire de suppression du Theme -->
+            {{ include('theme/_delete_form.html.twig') }}
+        </div>
+    </div>
+    <!-- Form End -->
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}Theme{% endblock %}
+
+{% block body %}
+    <h1>Theme</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ theme.id }}</td>
+            </tr>
+            <tr>
+                <th>titre</th>
+                <td>{{ theme.titre }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_theme_index') }}">back to list</a>
+
+    <a href="{{ path('app_theme_delete', {'id': theme.id}) }}">edit</a>
+
+    {{ include('theme/_delete_form.html.twig') }}
+{% endblock %}

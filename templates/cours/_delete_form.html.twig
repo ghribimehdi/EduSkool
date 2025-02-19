@@ -1,0 +1,5 @@
+{% extends 'baseAdmin.html.twig' %}
+<form method="post" action="{{ path('app_cours_delete', {'id': cour.id}) }}" onsubmit="return confirm('Are you sure?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cour.id) }}">
+    <button class="btn btn-danger">Delete</button>
+</form>

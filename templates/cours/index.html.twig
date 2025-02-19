@@ -1,0 +1,48 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}Cours - Back Office{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <h1 class="mb-4">Liste des Cours</h1>
+        <table class="table table-bordered">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>Id</th>
+                    <th>Titre</th>
+                    <th>Thème</th>
+                    <th>Date & Heure</th>
+                    <th>Enseignant</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cour in cours %}
+                    <tr>
+                        <td>{{ cour.id }}</td>
+                        <td>{{ cour.titre }}</td>
+                        <td>{{ cour.theme }}</td>
+                        <td>{{ cour.dateHeure ? cour.dateHeure|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>{{ cour.enseignant }}</td>
+                        <td>
+                            <a href="{{ path('app_cours_show', {'id': cour.id}) }}" class="btn btn-success btn-sm">Afficher</a>
+                            
+                            {# Formulaire pour supprimer avec confirmation et token CSRF #}
+                            <form action="{{ path('app_cours_delete', {'id': cour.id}) }}" method="post" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce cours ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cour.id) }}">
+                                <button class="btn btn-info btn-sm" type="submit">Supprimer</button>
+                            </form>
+                            
+                            <a href="{{ path('app_cours_edit', {'id': cour.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">Aucun enregistrement trouvé</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ path('app_cours_new') }}" class="btn btn-success">Créer un nouveau cours</a>
+    </div>
+{% endblock %}

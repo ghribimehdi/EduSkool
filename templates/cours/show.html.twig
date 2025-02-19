@@ -1,0 +1,44 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}Détails du Cours{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <h1>Détails du cours</h1>
+
+        {% if cours is defined %}
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ cours.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Titre</th>
+                        <td>{{ cours.titre is not empty ? cours.titre : 'Non défini' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date & Heure</th>
+                        <td>{{ cours.dateHeure ? cours.dateHeure|date('Y-m-d H:i:s') : 'Non défini' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Enseignant</th>
+                        <td>{{ cours.enseignant is not empty ? cours.enseignant : 'Non défini' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <a href="{{ path('app_cours_index') }}" class="btn btn-secondary">Retour à la liste</a>
+
+            {# Formulaire de suppression #}
+            <form action="{{ path('app_cours_delete', {'id': cours.id}) }}" method="post" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce cours ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cours.id) }}">
+                <button class="btn btn-info btn-sm" type="submit">Supprimer</button>
+            </form>
+
+            <a href="{{ path('app_cours_edit', {'id': cours.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+        {% else %}
+            <p>Cours introuvable.</p>
+        {% endif %}
+    </div>
+{% endblock %}
