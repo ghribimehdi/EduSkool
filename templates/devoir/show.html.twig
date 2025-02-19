@@ -1,0 +1,33 @@
+
+{% block title %}Devoir{% endblock %}
+
+{% block body %}
+    <h1>Devoir</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ devoir.id }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ devoir.titre }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ devoir.description }}</td>
+            </tr>
+            <tr>
+                <th>Datelimite</th>
+                <td>{{ devoir.datelimite ? devoir.datelimite|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_devoir_index') }}">back to list</a>
+
+    <a href="{{ path('app_devoir_edit', {'id': devoir.id}) }}">edit</a>
+
+    {{ include('devoir/_delete_form.html.twig') }}
+{% endblock %}

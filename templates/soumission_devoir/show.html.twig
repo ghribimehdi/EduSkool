@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Voir la soumission{% endblock %}
+
+{% block body %}
+    <h1>Détails de la soumission</h1>
+    <p><strong>Id:</strong> {{ soumission.id }}</p>
+    <p><strong>Fichier:</strong> {{ soumission.fichier ? soumission.fichier : 'Aucun fichier' }}</p>
+    <p><strong>Note:</strong> {{ soumission.note ? soumission.note : 'Non noté' }}</p>
+{% endblock %}
