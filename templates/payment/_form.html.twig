@@ -7,8 +7,9 @@
                 <h5 class="card-title mb-0">Payment Information</h5>
             </div>
             <div class="card-body">
-               {{ form_start(form, { 'action': path('app_payment_new', {'packId': pack.id}), 'method': 'POST', 'attr': {'id': 'payment-form', 'class': 'payment-form'} }) }} 
+                {{ form_start(form, { 'action': path('app_payment_new', {'packId': pack.id}), 'method': 'POST', 'attr': {'id': 'payment-form', 'class': 'payment-form'} }) }} 
 
+                    <!-- Payment Method -->
                     <div class="mb-3">
                         <label for="paymentMethod" class="form-label">Payment Method</label>
                         {{ form_widget(form.paymentMethod, {
@@ -16,8 +17,11 @@
                                 'class': 'form-select p-3 mb-3',
                             }
                         }) }}
+                        <!-- Display Errors -->
+                        <div class="text-danger mt-1 paymentMethod-error"></div>
                     </div>
 
+                    <!-- Card Number -->
                     <div class="mb-3">
                         <label for="cardNumber" class="form-label">Card Number</label>
                         {{ form_widget(form.cardNumber, {
@@ -27,8 +31,11 @@
                                 'placeholder': 'Enter card number'
                             }
                         }) }}
+                        <!-- Display Errors -->
+                        <div class="text-danger mt-1 cardNumber-error"></div>
                     </div>
 
+                    <!-- Expiration Date and CVV -->
                     <div class="mb-3 d-flex justify-content-between">
                         <div class="w-48">
                             <label for="cardExpiration" class="form-label">Expiration (MM/YY)</label>
@@ -38,7 +45,10 @@
                                     'placeholder': 'MM/YY'
                                 }
                             }) }}
+                            <!-- Display Errors -->
+                            <div class="text-danger mt-1 cardExpiration-error"></div>
                         </div>
+
                         <div class="w-48">
                             <label for="cardCVV" class="form-label">CVV</label>
                             {{ form_widget(form.cardCVV, {
@@ -48,16 +58,18 @@
                                     'placeholder': 'CVV'
                                 }
                             }) }}
+                            <!-- Display Errors -->
+                            <div class="text-danger mt-1 cardCVV-error"></div>
                         </div>
                     </div>
 
                     <div class="card-footer text-end">
-                        <!-- Open Confirmation Modal -->
-                        <button type="button" class="btn btn-primary px-5 py-2 text-white" data-bs-toggle="modal" data-bs-target="#confirmPaymentModal">
+                        <!-- Check Validation and Open Modal if Valid -->
+                        <button type="button" class="btn btn-primary px-5 py-2 text-white" onclick="validateForm()">
                             {{ button_label|default('Submit Payment') }}
                         </button>
                     </div>
-                
+
                 {{ form_end(form) }}
             </div>
         </div>
@@ -83,5 +95,68 @@
             </div>
         </div>
     </div>
+
+    <!-- JavaScript for Form Validation -->
+    <script>
+        function validateForm() {
+            // Clear previous errors
+            document.querySelectorAll('.text-danger').forEach(el => el.innerHTML = '');
+
+            // Get form fields
+            const paymentMethod = document.querySelector('[name="payment[paymentMethod]"]');
+            const cardNumber = document.querySelector('[name="payment[cardNumber]"]');
+            const cardExpiration = document.querySelector('[name="payment[cardExpiration]"]');
+            const cardCVV = document.querySelector('[name="payment[cardCVV]"]');
+
+            let isValid = true;
+
+            // Payment Method Validation
+            if (!paymentMethod.value) {
+                document.querySelector('.paymentMethod-error').innerHTML = "Payment method is required.";
+                isValid = false;
+            }
+
+            // Card Number Validation
+            if (!cardNumber.value || !/^\d{16}$/.test(cardNumber.value)) {
+                document.querySelector('.cardNumber-error').innerHTML = "Card number must be exactly 16 digits.";
+                isValid = false;
+            }
+
+          
+           // Expiration Date Validation (Improved Check)
+if (cardExpiration.value) {
+    const [month, year] = cardExpiration.value.split('/');
+    const currentYear = new Date().getFullYear() % 100; // Get last two digits of current year
+    const currentMonth = new Date().getMonth() + 1; // Months are 0-based in JS
+
+    if (!/^\d{2}\/\d{2}$/.test(cardExpiration.value)) {
+        document.querySelector('.cardExpiration-error').innerHTML = "Expiration date must be in MM/YY format.";
+        isValid = false;
+    } else if (month < 1 || month > 12) {
+        document.querySelector('.cardExpiration-error').innerHTML = "Month must be between 01 and 12.";
+        isValid = false;
+    } else if (year < currentYear || (year == currentYear && month < currentMonth)) {
+        document.querySelector('.cardExpiration-error').innerHTML = "Expiration date must be in the future.";
+        isValid = false;
+    }
+} else {
+    document.querySelector('.cardExpiration-error').innerHTML = "Expiration date is required.";
+    isValid = false;
+}
+
+
+            // CVV Validation
+            if (!cardCVV.value || !/^\d{3}$/.test(cardCVV.value)) {
+                document.querySelector('.cardCVV-error').innerHTML = "CVV must be exactly 3 digits.";
+                isValid = false;
+            }
+
+            // If all fields are valid, show confirmation modal
+            if (isValid) {
+                var confirmationModal = new bootstrap.Modal(document.getElementById('confirmPaymentModal'));
+                confirmationModal.show();
+            }
+        }
+    </script>
 
 {% endblock %}
