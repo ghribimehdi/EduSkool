@@ -22,14 +22,7 @@ class SubscriptionType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('status')
-            ->add('user', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
-            ->add('pack', EntityType::class, [
-                'class' => Pack::class,
-                'choice_label' => 'id',
-            ])
+          
         ;
     }
 
