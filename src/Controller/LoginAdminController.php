@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\Admin;
@@ -41,7 +40,7 @@ class LoginAdminController extends AbstractController
             }
         }
 
-        return $this->render('backoffice/loginAdmin.html.twig', [
+        return $this->render('admin/LoginAdmin.html.twig', [
             'error' => $error,
             'predefinedEmail' => $predefinedEmail,
             'predefinedPassword' => $predefinedPassword
@@ -51,13 +50,13 @@ class LoginAdminController extends AbstractController
     #[Route('/admin/dashboard', name: 'app_admin_dashboard')]
     public function adminDashboard(): Response
     {
-        return $this->render('backoffice/dashboard.html.twig');
+        return $this->render('admin/dashboard.html.twig');
     }
 
     // New route for the base admin page
     #[Route('/admin/base', name: 'app_base_admin')]
     public function baseAdmin(): Response
     {
-        return $this->render('backoffice/baseAdmin.html.twig');
+        return $this->render('admin/baseAdmin.html.twig');
     }
 }

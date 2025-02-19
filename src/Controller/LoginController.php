@@ -32,7 +32,7 @@ class LoginController extends AbstractController
             }
         }
 
-        return $this->render('login/login.html.twig', [
+        return $this->render('/frontoffice/login.html.twig', [
             'error' => $error
         ]);
     }

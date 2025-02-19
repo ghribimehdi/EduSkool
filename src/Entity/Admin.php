@@ -19,7 +19,6 @@ class Admin
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-
     public function getId(): ?int
     {
         return $this->id;
@@ -41,9 +40,17 @@ class Admin
         return $this->password;
     }
 
+    // Hash le mot de passe lors de la modification
     public function setPassword(string $password): static
     {
-        $this->password = $password;
+        // Si un mot de passe est fourni, on le hache avant de le stocker
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
         return $this;
+    }
+
+    // Vérifier si le mot de passe correspond au mot de passe haché
+    public function verifyPassword(string $password): bool
+    {
+        return password_verify($password, $this->password);
     }
 }
