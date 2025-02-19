@@ -1,0 +1,25 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+app_seance_psychologique_index:
+    path: /seance-psychologique
+    controller: App\Controller\SeancePsychologiqueController::index
+
+
+app_seance_psychologique_new:
+    path: /seance/creer
+    controller: App\Controller\SeancePsychologiqueController::new
+
+app_seance_psychologique_show:
+    path: /seance/{id}
+    controller: App\Controller\SeancePsychologiqueController::show
+
+app_seance_psychologique_edit:
+    path: /seance/{id}/modifier
+    controller: App\Controller\SeancePsychologiqueController::edit
+
+app_seance_psychologique_delete:
+    path: /seance/{id}/supprimer
+    controller: App\Controller\SeancePsychologiqueController::delete

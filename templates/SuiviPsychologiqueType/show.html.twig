@@ -1,0 +1,93 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}Détails du suivi psychologique{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background-color: #FFF0F5;
+        }
+        .card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-pink {
+            background-color: #FF69B4;
+            border-color: #FF69B4;
+            color: white;
+        }
+        .btn-pink:hover {
+            background-color: #FF1493;
+            border-color: #FF1493;
+            color: white;
+        }
+        .icon-pink {
+            color: #FF69B4;
+        }
+        .detail-label {
+            color: #FF69B4;
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title text-center mb-4 text-pink">
+                            <i class="fas fa-info-circle icon-pink"></i> Détails du suivi psychologique
+                        </h1>
+
+                        <table class="table table-hover">
+                            <tbody>
+                            <tr>
+                                <th class="detail-label"><i class="far fa-calendar-alt icon-pink"></i> Date du suivi</th>
+                                <td>{{ suivi.dateSuivi|date('d/m/Y H:i') }}</td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label"><i class="fas fa-tag icon-pink"></i> Type de suivi</th>
+                                <td>{{ suivi.suiviType }}</td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label"><i class="fas fa-heart icon-pink"></i> État émotionnel</th>
+                                <td>{{ suivi.etatEmotionnel }}</td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label"><i class="fas fa-user icon-pink"></i> Participant</th>
+                                <td>{{ suivi.nomParticipant }}</td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label"><i class="fas fa-user-md icon-pink"></i> Psychologue</th>
+                                <td>{{ suivi.nomPsychologue }}</td>
+                            </tr>
+                            <tr>
+                                <th class="detail-label"><i class="fas fa-link icon-pink"></i> Séance associée</th>
+                                <td>{{ suivi.seance ? suivi.seance.id : 'N/A' }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="d-flex justify-content-center mt-4">
+                            <a href="{{ path('app_suivi_psychologique_index') }}" class="btn btn-outline-secondary me-2">
+                                <i class="fas fa-arrow-left"></i> Retour à la liste
+                            </a>
+                            <a href="{{ path('app_suivi_psychologique_edit', {'id': suivi.id}) }}" class="btn btn-pink">
+                                <i class="fas fa-edit"></i> Modifier
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}Liste des suivis psychologiques{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background-color: #FFF0F5;
+        }
+        .card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-pink {
+            background-color: #FF69B4;
+            border-color: #FF69B4;
+            color: white;
+        }
+        .btn-pink:hover {
+            background-color: #FF1493;
+            border-color: #FF1493;
+            color: white;
+        }
+        .icon-pink {
+            color: #FF69B4;
+        }
+        .table th {
+            color: #FF69B4;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title text-center mb-4 text-pink">
+                    <i class="fas fa-clipboard-list icon-pink"></i> Liste des suivis psychologiques
+                </h1>
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th><i class="far fa-calendar-alt icon-pink"></i> Date du suivi</th>
+                            <th><i class="fas fa-tag icon-pink"></i> Type de suivi</th>
+                            <th><i class="fas fa-heart icon-pink"></i> État émotionnel</th>
+                            <th><i class="fas fa-user icon-pink"></i> Participant</th>
+                            <th><i class="fas fa-user-md icon-pink"></i> Psychologue</th>
+                            <th><i class="fas fa-link icon-pink"></i> Séance associée</th>
+                            <th><i class="fas fa-cogs icon-pink"></i> Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for suivi in suivis %}
+                            <tr>
+                                <td>{{ suivi.dateSuivi|date('d/m/Y H:i') }}</td>
+                                <td>{{ suivi.suiviType }}</td>
+                                <td>{{ suivi.etatEmotionnel }}</td>
+                                <td>{{ suivi.nomParticipant }}</td>
+                                <td>{{ suivi.nomPsychologue }}</td>
+                                <td>{{ suivi.seance ? suivi.seance.id : 'N/A' }}</td>
+                                <td>
+                                    <a href="{{ path('app_suivi_psychologique_show', {'id': suivi.id}) }}" class="btn btn-sm btn-outline-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ path('app_suivi_psychologique_edit', {'id': suivi.id}) }}" class="btn btn-sm btn-outline-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ path('app_suivi_psychologique_delete', {'id': suivi.id}) }}" method="post" style="display:inline;">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ suivi.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="{{ path('app_suivi_psychologique_new') }}" class="btn btn-pink">
+                        <i class="fas fa-plus-circle"></i> Créer un nouveau suivi
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+{% endblock %}

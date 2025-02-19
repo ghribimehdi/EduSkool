@@ -1,0 +1,96 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block title %}Modifier le suivi psychologique{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background-color: #FFF0F5;
+        }
+        .card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-pink {
+            background-color: #FF69B4;
+            border-color: #FF69B4;
+            color: white;
+        }
+        .btn-pink:hover {
+            background-color: #FF1493;
+            border-color: #FF1493;
+            color: white;
+        }
+        .icon-pink {
+            color: #FF69B4;
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title text-center mb-4 text-pink">
+                            <i class="fas fa-edit icon-pink"></i> Modifier le suivi psychologique
+                        </h1>
+
+                        {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+                        {% for field in form %}
+                            {% if field.vars.name != '_token' %}
+                                <div class="mb-3">
+                                    {{ form_label(field, null, {'label_attr': {'class': 'form-label'}}) }}
+                                    <div class="input-group">
+                                        <span class="input-group-text icon-pink">
+                                            {% if field.vars.name == 'dateSuivi' %}
+                                                <i class="far fa-calendar-alt"></i>
+                                            {% elseif field.vars.name == 'suiviType' %}
+                                                <i class="fas fa-tag"></i>
+                                            {% elseif field.vars.name == 'etatEmotionnel' %}
+                                                <i class="fas fa-heart"></i>
+                                            {% elseif field.vars.name == 'nomParticipant' %}
+                                                <i class="fas fa-user"></i>
+                                            {% elseif field.vars.name == 'nomPsychologue' %}
+                                                <i class="fas fa-user-md"></i>
+                                            {% elseif field.vars.name == 'seance' %}
+                                                <i class="fas fa-link"></i>
+                                            {% else %}
+                                                <i class="fas fa-info-circle"></i>
+                                            {% endif %}
+                                        </span>
+                                        {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    {{ form_errors(field) }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-pink">
+                                <i class="fas fa-save"></i> Enregistrer les modifications
+                            </button>
+                        </div>
+
+                        {{ form_end(form) }}
+
+                        <div class="mt-3 text-center">
+                            <a href="{{ path('app_suivi_psychologique_index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Retour à la liste
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
