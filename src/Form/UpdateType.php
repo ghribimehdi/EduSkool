@@ -3,13 +3,11 @@
 namespace App\Form\User;
 
 use App\Entity\User;
-use phpDocumentor\Reflection\PseudoTypes\True_;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class UpdateType extends AbstractType
 {
@@ -21,15 +19,15 @@ class UpdateType extends AbstractType
             ->add('email')
             ->add('roles', ChoiceType::class, [
                 'choices' => [
-                    'Client' => 'CLIENT',
-                    'Livreur' => 'LIVREUR',
-                    'Gérant' => 'GERANT',
+                    'Étudiant' => 'Etudiant',
+                    'Enseignant' => 'Enseignant',
                 ],
-                'multiple' => true,
-                'expanded' => true,
+                'multiple' => true, // Permet de choisir plusieurs rôles
+                'expanded' => true, // Affiche les options sous forme de cases à cocher
             ])
-            ->add('submit',SubmitType::class);
-        ;
+            ->add('submit', SubmitType::class, [
+                'label' => 'Mettre à jour' // Le texte du bouton de soumission
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
