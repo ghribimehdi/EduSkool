@@ -1,26 +1,28 @@
 <?php
+// AdminController.php
+
 namespace App\Controller;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AdminController extends AbstractController
 {
+    // Afficher la page dashboard avec la liste des utilisateurs
     #[Route('/backend/dashboard', name: 'admin_dashboard')]
     public function dashboard(EntityManagerInterface $entityManager): Response
     {
         // Récupérer tous les utilisateurs
         $users = $entityManager->getRepository(User::class)->findAll();
 
+        // Rendre la vue dashboard avec les utilisateurs
         return $this->render('admin/dashboard.html.twig', [
             'users' => $users,
         ]);
     }
-
     #[Route('/backend/user/edit/{id}', name: 'admin_edit_user')]
     public function editUser(int $id, EntityManagerInterface $entityManager, Request $request): Response
     {

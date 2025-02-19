@@ -14,12 +14,9 @@ class LoginAdminController extends AbstractController
     public function login(Request $request, EntityManagerInterface $entityManager): Response
     {
         $error = null;
+        $predefinedEmail = 'admin@example.com';
+        $predefinedPassword = 'admin123';
 
-        // Define the predefined admin credentials
-        $predefinedEmail = 'admin@example.com'; // Replace with the actual email
-        $predefinedPassword = 'admin123';  // Replace with the actual password
-
-        // Set default values for the login form
         $email = $predefinedEmail;
         $password = $predefinedPassword;
 
@@ -27,7 +24,6 @@ class LoginAdminController extends AbstractController
             $email = $request->request->get('email');
             $password = $request->request->get('password');
 
-            // Vérifier si l'admin existe
             $admin = $entityManager->getRepository(Admin::class)->findOneBy(['email' => $email]);
 
             if (!$admin) {
@@ -35,7 +31,6 @@ class LoginAdminController extends AbstractController
             } elseif ($admin->getPassword() !== $password) {
                 $error = "Mot de passe incorrect.";
             } else {
-                // Rediriger vers la page admin après connexion réussie
                 return $this->redirectToRoute('app_base_admin');
             }
         }
@@ -53,7 +48,6 @@ class LoginAdminController extends AbstractController
         return $this->render('admin/dashboard.html.twig');
     }
 
-    // New route for the base admin page
     #[Route('/admin/base', name: 'app_base_admin')]
     public function baseAdmin(): Response
     {

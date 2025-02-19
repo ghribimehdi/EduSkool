@@ -1,26 +1,76 @@
 {% block body %}
-    <h2>Connexion</h2>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        h2 {
+            color: #2a9d8f;
+        }
+        p {
+            margin: 10px 0;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #2a9d8f;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #21867a;
+        }
+        a {
+            color: #2a9d8f;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
+    <div class="login-container">
+        <h2>Connexion</h2>
 
-    <form method="post" action="{{ path('app_login') }}">
-        <label>Email :</label>
-        <input type="email" name="email" required><br>
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
 
-        <label>Mot de passe :</label>
-        <input type="password" name="password" required><br>
+        <form method="post" action="{{ path('app_login') }}">
+            <label>Email :</label>
+            <input type="email" name="email" required><br>
 
-        <label>Rôle :</label>
-        <select name="role">
-            <option value="Etudiant">Étudiant</option>
-            <option value="Enseignant">Enseignant</option>
-        </select><br>
+            <label>Mot de passe :</label>
+            <input type="password" name="password" required><br>
 
-        <button type="submit">Se connecter</button>
-    </form>
+            <label>Rôle :</label>
+            <select name="role">
+                <option value="Etudiant">Étudiant</option>
+                <option value="Enseignant">Enseignant</option>
+            </select><br>
 
-    <p>Pas encore inscrit ? <a href="{{ path('app_inscription') }}">Créer un compte</a></p>
-    <p><a href="">Mot de passe oublié ?</a></p>
+            <button type="submit">Se connecter</button>
+        </form>
+
+        <p>Pas encore inscrit ? <a href="{{ path('app_inscription') }}">Créer un compte</a></p>
+        <p><a href="">Mot de passe oublié ?</a></p>
+    </div>
 {% endblock %}

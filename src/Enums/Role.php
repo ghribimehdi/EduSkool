@@ -2,20 +2,16 @@
 
 namespace App\Enums;
 
-use Doctrine\Common\Annotations\Annotation\Enum;
-
-Enum Role
+enum Role: string
 {
-    public const GERANT = 'GERANT';
-    public const LIVREUR = 'LIVREUR';
-    public const CLIENT = 'CLIENT';
+    case ETUDIANT = 'ETUDIANT';
+    case ENSEIGNANT = 'ENSEIGNANT';
 
     public static function getChoices(): array
     {
         return [
-            self::GERANT => 'Gerant',
-            self::LIVREUR => 'Livreur',
-            self::CLIENT => 'Client',
+            self::ETUDIANT->value => 'Étudiant',
+            self::ENSEIGNANT->value => 'Enseignant',
         ];
     }
 }
