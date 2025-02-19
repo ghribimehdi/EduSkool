@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container text-center mt-5">
+        <h2 class="text-success">🎉 Subscription Successful!</h2>
+        <p>Thank you for your payment. Your subscription is now active.</p>
+        <a href="{{ path('app_subscription_index') }}" class="btn btn-primary">Go to Dashboard</a>
+    </div>
+{% endblock %}
