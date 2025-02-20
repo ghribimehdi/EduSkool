@@ -50,7 +50,7 @@ final class PaymentController extends AbstractController
         // Step 3: Handle the form submission
         if ($form->isSubmitted() && $form->isValid()) {
             // Step 3.1: Find the user (you should replace this with the actual authenticated user)
-            $user = $entityManager->getRepository(User::class)->find(6); // Replace with actual authenticated user
+            $user = $entityManager->getRepository(User::class)->find(8); // Replace with actual authenticated user
             if (!$user) {
                 throw $this->createNotFoundException('User not found');
             }

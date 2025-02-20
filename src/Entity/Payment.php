@@ -27,7 +27,7 @@ class Payment
     private ?string $paymentMethod = null; // Ex: "Credit Card", "PayPal"
 
     #[ORM\Column(length: 20)]
-    private ?string $status = 'PENDING'; // SUCCESS, FAILED, PENDING
+    private ?string $status = 'SUCCESS'; // SUCCESS, FAILED, PENDING
 
     #[ORM\ManyToOne(targetEntity: Pack::class)]
     #[ORM\JoinColumn(nullable: false)]
