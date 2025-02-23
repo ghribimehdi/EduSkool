@@ -12,6 +12,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet"> 
+    {% block stylesheets %}
 
         <!-- Icon Font Stylesheet -->
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
@@ -28,18 +29,14 @@
         <!-- Template Stylesheet -->
         <link href={{asset("css/style.css")}} rel="stylesheet">
 
-        
+            {% endblock %}
+
 
     </head>
 
     <body>
 
-        <!-- Spinner Start -->
-        <div id="spinner" class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
-            <div class="spinner-grow text-primary" role="status"></div>
-        </div>
-        <!-- Spinner End -->
-
+{% block Navbar %}
 
         <!-- Navbar start -->
         <div class="container-fluid border-bottom bg-light wow fadeIn" data-wow-delay="0.1s">
@@ -103,6 +100,9 @@
             </div>
         </div>
         <!-- Navbar End -->
+
+    {% endblock %}
+{# 
 
 
         <!-- Modal Search Start -->
@@ -361,10 +361,9 @@
         </div>
         <!-- Program End -->
 
-{% block body %}
        
         <!-- Events End-->
-        {% endblock %}
+  
 
 
         <!-- Blog Start-->
@@ -630,7 +629,16 @@
         </div>
         <!-- Testimonial End -->
 
+ 
 
+#}
+
+{% block body %}
+
+
+    {% endblock %}
+
+{% block Footer %}
         <!-- Footer Start -->
         <div class="container-fluid footer py-5 wow fadeIn" data-wow-delay="0.1s">
             <div class="container py-5">
@@ -743,7 +751,9 @@
 
         <!-- Back to Top -->
         <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>   
+    {% endblock %}
 
+    {% block JavaScript %}
         
     <!-- JavaScript Libraries -->
     <script src={{asset("https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js")}}></script>
@@ -757,5 +767,6 @@
     <!-- Template Javascript -->
     <script src={{asset("js/main.js")}}></script>
     </body>
+    {% endblock %}
 
 </html>

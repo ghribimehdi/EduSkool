@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 #[Route('/user')]
 final class UserController extends AbstractController
@@ -77,5 +78,29 @@ final class UserController extends AbstractController
         }
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('/profile', name: 'app_user_profile', methods: ['GET'])]
+    public function profile(UserRepository $userRepository, SessionInterface $session): Response
+    {
+        // Récupérer l'ID de l'utilisateur depuis la session
+        $userId = $session->get('user_id'); // Assurez-vous que 'user_id' est stocké dans la session lors de la connexion
+    
+        // Vérifier si l'ID existe dans la session
+        if (!$userId) {
+            return $this->redirectToRoute('app_login'); // Rediriger vers la page de connexion si l'ID est introuvable
+        }
+    
+        // Récupérer l'utilisateur depuis la base de données
+        $user = $userRepository->find($userId);
+    
+        // Vérifier si l'utilisateur existe
+        if (!$user) {
+            return $this->redirectToRoute('app_login'); // Rediriger vers la page de connexion si l'utilisateur n'existe pas
+        }
+    
+        // Afficher le profil de l'utilisateur
+        return $this->render('user/profile.html.twig', [
+            'user' => $user,
+        ]);
     }
 }

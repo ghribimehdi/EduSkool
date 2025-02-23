@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 19 fév. 2025 à 16:37
+-- Généré le : dim. 23 fév. 2025 à 15:22
 -- Version du serveur : 9.1.0
 -- Version de PHP : 8.3.14
 
@@ -41,7 +41,6 @@ CREATE TABLE IF NOT EXISTS `admin` (
 --
 
 INSERT INTO `admin` (`email`, `password`, `id`) VALUES
-('ghribi.mehdi@gmail.com', '221JMT5913', 1),
 ('admin@example.com', 'admin123', 2);
 
 -- --------------------------------------------------------
@@ -107,17 +106,15 @@ CREATE TABLE IF NOT EXISTS `user` (
   `is_verified` tinyint(1) NOT NULL,
   `verification_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `user`
 --
 
 INSERT INTO `user` (`id`, `nom`, `prenom`, `email`, `password`, `roles`, `is_verified`, `verification_code`) VALUES
-(8, 'Ghribi', 'Mehdi', 'mehdigh5624@gmail.com', 'mehdi123', '[\"ROLE_ETUDIANT\"]', 0, NULL),
-(9, 'mehdi', 'ghribi', 'ghribi.mehdi@esprit.tn', 'mehdi123', 'ROLE_ETUDIANT', 0, NULL),
-(10, 'mehdi', 'Mehdi', 'mehdigh98@gmail.com', '123', 'ROLE_ETUDIANT', 0, NULL),
-(11, 'Ghribi', 'Mehdi', 'ghribi@esprit.tn', '123', 'ROLE_ETUDIANT', 0, NULL);
+(18, 'Ghribi', 'Mehdi', 'mehdigh5624@gmail.com', '123', 'ROLE_ETUDIANT', 0, NULL),
+(19, 'turki', 'insaf', 'ghribi.mehdi@esprit.tn', '123', 'ROLE_ENSEIGNANT', 0, NULL);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
