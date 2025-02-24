@@ -54,22 +54,28 @@
             <p style="color: red;">{{ error }}</p>
         {% endif %}
 
-        <form method="post" action="{{ path('app_login') }}">
-            <label>Email :</label>
-            <input type="email" name="email" required><br>
-
-            <label>Mot de passe :</label>
-            <input type="password" name="password" required><br>
-
-            <label>Rôle :</label>
-            <select name="role">
-                <option value="Etudiant">Étudiant</option>
-                <option value="Enseignant">Enseignant</option>
-            </select><br>
-
-            <button type="submit">Se connecter</button>
+        <form method="POST" action="{{ path('app_login') }}">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="role">Rôle</label>
+                <select id="role" name="role" class="form-control" required>
+                    <option value="ROLE_ETUDIANT">Étudiant</option>
+                    <option value="ROLE_ENSEIGNANT">Enseignant</option>
+                    <option value="ROLE_PSYCHOLOGUE">Psychologue</option>
+                </select>
+            </div>
+        
+            <button type="submit" class="btn btn-primary">Se connecter</button>
         </form>
-
         <p>Pas encore inscrit ? <a href="{{ path('app_inscription') }}">Créer un compte</a></p>
         <p><a href="">Mot de passe oublié ?</a></p>
     </div>

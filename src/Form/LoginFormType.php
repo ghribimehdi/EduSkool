@@ -27,6 +27,7 @@ class LoginFormType extends AbstractType
                 'choices' => [
                     'Étudiant' => 'Etudiant',
                     'Enseignant' => 'Enseignant',
+                    'Psychologue'=> 'Psychologue'
                 ],
                 'multiple' => true, // Permet plusieurs rôles
                 'expanded' => true, // Affiche les options sous forme de cases à cocher

@@ -32,9 +32,21 @@ class LoginController extends AbstractController
                 $session->set('user_id', $user->getId());
                 $session->set('user_name', $user->getNom());
                 $session->set('user_prenom', $user->getPrenom());
+                $session->set('user_role', $user->getRoles());  // Stocker les rôles dans la session
 
-                // Rediriger vers la page d'accueil de l'étudiant
-                return $this->redirectToRoute('app_student_dashboard');
+                // Vérification du rôle de l'utilisateur et redirection vers le tableau de bord approprié
+                $roles = $user->getRoles();  // Récupérer le tableau des rôles
+
+                // Comparer avec les rôles spécifiques
+                if (in_array('ROLE_ETUDIANT', $roles)) {
+                    return $this->redirectToRoute('app_student_dashboard');
+                } elseif (in_array('ROLE_ENSEIGNANT', $roles)) {
+                    return $this->redirectToRoute('app_teacher_dashboard');
+                } elseif (in_array('ROLE_PSYCHOLOGUE', $roles)) {
+                    return $this->redirectToRoute('app_psychologist_dashboard');
+                } else {
+                    $error = "Rôle non défini ou invalide.";
+                }
             }
         }
 
@@ -49,10 +61,42 @@ class LoginController extends AbstractController
         // Récupérer les informations de la session
         $userName = $session->get('user_name');
         $userPrenom = $session->get('user_prenom');
+        $userRole = $session->get('user_role');
 
         return $this->render('user/base.html.twig', [
             'userName' => $userName,
-            'userPrenom' => $userPrenom
+            'userPrenom' => $userPrenom,
+            'userRole' => $userRole
+        ]);
+    }
+
+    #[Route(path: '/teacher-dashboard', name: 'app_teacher_dashboard')]
+    public function teacherDashboard(SessionInterface $session): Response
+    {
+        // Récupérer les informations de la session
+        $userName = $session->get('user_name');
+        $userPrenom = $session->get('user_prenom');
+        $userRole = $session->get('user_role');
+
+        return $this->render('user/enseignant.html.twig', [
+            'userName' => $userName,
+            'userPrenom' => $userPrenom,
+            'userRole' => $userRole
+        ]);
+    }
+
+    #[Route(path: '/psychologist-dashboard', name: 'app_psychologist_dashboard')]
+    public function psychologistDashboard(SessionInterface $session): Response
+    {
+        // Récupérer les informations de la session
+        $userName = $session->get('user_name');
+        $userPrenom = $session->get('user_prenom');
+        $userRole = $session->get('user_role');
+
+        return $this->render('user/psychologue.html.twig', [
+            'userName' => $userName,
+            'userPrenom' => $userPrenom,
+            'userRole' => $userRole
         ]);
     }
 }

@@ -146,6 +146,6 @@ class User
 
     public function getRole(): array
     {
-        return ['ETUDIANT', 'ENSEIGNANT'];
+        return ['ROLE_ETUDIANT', 'ROLE_ENSEIGNANT', 'ROLE_PSYCHOLGUE'];
     }
 }
