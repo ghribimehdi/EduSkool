@@ -25,12 +25,12 @@ class Activity
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $date;
+    
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $imageFileName = null;
 
-    #[ORM\OneToMany(mappedBy: 'activity', targetEntity: \App\Entity\Inscription::class, orphanRemoval: true)]
-    private Collection $inscriptions;
+ 
    
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
@@ -41,16 +41,41 @@ class Activity
 #[ORM\OneToMany(mappedBy: 'activity', targetEntity: Commentaire::class, orphanRemoval: true, cascade: ["remove"])]
     private Collection $commentaires;
 
+  
+#[ORM\Column(length: 255, nullable: true)]
+private ?string $typesActivity = null;
+
+
+#[ORM\Column(type: 'datetime')]
+private \DateTimeInterface $createdAt;
+
+
 
     public function __construct()
     {
-        $this->inscriptions = new ArrayCollection();
+        $this->createdAt = new \DateTime(); // Date actuelle
+
         $this->commentaires = new ArrayCollection();
         
     }
 
     // --- Getters et Setters ---
 
+
+    
+
+    public function getTypesActivity(): ?string
+    {
+        return $this->typesActivity;
+    }
+
+    public function setTypesActivity(?string $typesActivity): static
+    {
+        $this->typesActivity = $typesActivity;
+
+        return $this;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -100,10 +125,6 @@ class Activity
         return $this;
     }
 
-    public function getInscriptions(): Collection
-    {
-        return $this->inscriptions;
-    }
 
     /**
      * Déplace le fichier uploadé dans le dossier spécifié et met à jour le nom du fichier.
@@ -119,28 +140,9 @@ class Activity
         $this->setImageFileName($newFilename);
     }
 
-    public function addInscription(Inscription $inscription): static
-    {
-        if (!$this->inscriptions->contains($inscription)) {
-            $this->inscriptions->add($inscription);
-            $inscription->setActivity($this);
-        }
+   
 
-        return $this;
-    }
-
-    public function removeInscription(Inscription $inscription): static
-    {
-        if ($this->inscriptions->removeElement($inscription)) {
-            // set the owning side to null (unless already changed)
-            if ($inscription->getActivity() === $this) {
-                $inscription->setActivity(null);
-            }
-        }
-
-        return $this;
-    }
-
+   
 
     public function getCommentaires(): Collection
 {
@@ -182,6 +184,13 @@ public function setApproved(bool $isApproved): self
 {
     $this->isApproved = $isApproved;
     return $this;
+}
+
+
+
+public function getCreatedAt(): \DateTimeInterface
+{
+    return $this->createdAt;
 }
 
 

@@ -9,11 +9,56 @@
     <div class="container py-5">
         <div class="row g-5 align-items-center">
             <div class="col-lg-5 wow fadeIn" data-wow-delay="0.1s">
-                <div class="video border ratio ratio-16x9">
-                    <img src="{{ asset('uploads/' ~ activity.imageFileName) }}" 
-                         alt="Activity Image" 
-                         class="img-fluid w-100 h-100 object-fit-cover rounded">
-                </div>
+              
+
+
+
+
+<!-- img -->
+{% if images is not empty %}
+  <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      {% for image in images %}
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ loop.index0 }}"
+                class="{{ loop.first ? 'active' : '' }}"
+                aria-label="Slide {{ loop.index }}"
+                {% if loop.first %}aria-current="true"{% endif %}></button>
+      {% endfor %}
+    </div>
+    <div class="carousel-inner">
+      {% for image in images %}
+        <div class="carousel-item {{ loop.first ? 'active' : '' }}">
+          <img src="{{ asset('uploads/' ~ image) }}" class="d-block w-100" alt="{{ activity.titre }} - Slide {{ loop.index }}" style="width: 300px; height: 600px; object-fit: cover;">
+        </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+{% else %}
+  <p>Pas d'image disponible</p>
+{% endif %}
+<!--EndImag-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             </div>
             <div class="col-lg-7 wow fadeIn" data-wow-delay="0.3s">
                 <h4 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius">
@@ -38,7 +83,7 @@
                         <h6><i class="fas fa-check-circle me-2 text-secondary"></i>Qualified Teacher</h6>
                     </div>
                 </div>
-                <a href="" class="btn btn-primary px-5 py-3 btn-border-radius">participer</a>
+              <!--  <a href="" class="btn btn-primary px-5 py-3 btn-border-radius">participer</a>-->
                 <a href="{{ path('app_activity_index') }}" class="btn btn-primary px-5 py-3 btn-border-radius">Retour</a>
                 
             </div>

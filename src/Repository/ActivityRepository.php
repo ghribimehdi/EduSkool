@@ -25,7 +25,33 @@ class ActivityRepository extends ServiceEntityRepository
         ->getResult();
 }
 
-//    /**
+
+
+// src/Repository/ActivityRepository.php
+
+public function getActivityCountByTypeAndDateLast10Days(): array
+{
+    $tenDaysAgo = new \DateTime();
+    $tenDaysAgo->modify('-10 days');
+
+    return $this->createQueryBuilder('a')
+        ->select("SUBSTRING(a.createdAt, 1, 10) as date, a.typesActivity as type, COUNT(a.id) as count")
+        ->where('a.createdAt >= :tenDaysAgo')
+        ->setParameter('tenDaysAgo', $tenDaysAgo)
+        ->groupBy("date, type")
+        ->orderBy("date", "ASC")
+        ->getQuery()
+        ->getResult();
+}
+
+
+
+
+//  SELECT DATE(created_at) AS jour, types_activity, COUNT(*) AS total
+//FROM activity
+//GROUP BY DATE(created_at), types_activity
+//ORDER BY DATE(created_at) ASC;
+//  /**
 //     * @return Activity[] Returns an array of Activity objects
 //     */
 //    public function findByExampleField($value): array

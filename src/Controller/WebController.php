@@ -10,7 +10,7 @@ final class WebController extends AbstractController{
     #[Route('/web', name: 'app_web')]
     public function index(): Response
     {
-        return $this->render('web/index.html.twig', [
+        return $this->render('frontoffice/web.html.twig', [
             'controller_name' => 'WebController',
         ]);
     }

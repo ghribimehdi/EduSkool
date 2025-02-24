@@ -9,6 +9,9 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Validator\Constraints\All;
+
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -42,17 +45,39 @@ class ActivityType extends AbstractType
                 ],
             ])
             ->add('imageFileName', FileType::class, [
-                'label' => 'Image (JPG, PNG)',
+                'label' => 'Images (JPG, PNG)',
                 'required' => false,
                 'mapped' => false,
+                'multiple' => true,
                 'constraints' => [
-                    new Image([
-                        'mimeTypes' => ['image/jpeg', 'image/png'],
-                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPG, PNG).',
+                    new All([
+                        'constraints' => [
+                            new Image([
+                                'mimeTypes' => ['image/jpeg', 'image/png'],
+                                'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPG, PNG).',
+                            ])
+                        ]
                     ])
                 ]
+            ])
+                    ->add('typesActivity', ChoiceType::class, [
+                        'label'       => 'Type d\'activité',
+                        'choices'     => [
+                            'Sport'     => 'sport',
+                            'Culture'   => 'culture',
+                            'Éducation' => 'Education',
+                            
+                        ],
+                        'placeholder' => 'Sélectionnez un ou plusieurs types',
+                        'expanded'    => false,   // false pour une liste déroulante, true pour des cases à cocher ou boutons radio
+                        'multiple'    => false,    // true pour permettre la sélection multiple
+                        'constraints' => [
+                            new NotBlank(['message' => 'Veuillez sélectionner au moins un type d\'activité.']),
+                        ],
                     ]);
             
+
+                    
             
             // Si vous n'utilisez plus la relation avec User, supprimez également ce champ
             // ->add('enseignant', EntityType::class, [

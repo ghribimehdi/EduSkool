@@ -1,61 +1,106 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
+#[Route('/user')]
 final class UserController extends AbstractController
 {
-    #[Route('/user', name: 'app_user')]
-    public function index(EntityManagerInterface $entityManager): Response
+    #[Route(name: 'app_user_index', methods: ['GET'])]
+    public function index(UserRepository $userRepository): Response
     {
-        // Créer des utilisateurs avec différents rôles
-        $user1 = new User();
-        $user1->setEmail('enseignant1@example.com');
-        $user1->setPassword(password_hash('password1', PASSWORD_BCRYPT));  // Assurez-vous d'utiliser un mot de passe haché
-        $user1->setRoles(['ROLE_ENSEIGNANT']);
-        $user1->setLastname('Doe');
-        $user1->setFirstname('John');
-        $user1->setAddress('123 Street');
-        $user1->setZipcode('12345');
-        $user1->setCity('Some City');
-        // Remplacez DateTime par DateTimeImmutable
-$createdAt = new \DateTimeImmutable();
-$user1->setCreatedAt($createdAt);
-
-        
-        // Ajouter l'utilisateur à la base de données
-        $entityManager->persist($user1);
-        
-        // Créer un autre utilisateur avec un rôle de participant
-        $user2 = new User();
-        $user2->setEmail('participant1@example.com');
-        $user2->setPassword(password_hash('password2', PASSWORD_BCRYPT));  // Assurez-vous d'utiliser un mot de passe haché
-        $user2->setRoles(['ROLE_PARTICIPANT']);
-        $user2->setLastname('Smith');
-        $user2->setFirstname('Jane');
-        $user2->setAddress('456 Avenue');
-        $user2->setZipcode('67890');
-        $user2->setCity('Other City');
-        // Remplacez DateTime par DateTimeImmutable
-$createdAt = new \DateTimeImmutable();
-$user2->setCreatedAt($createdAt);
-
-        
-
-        // Ajouter l'utilisateur à la base de données
-        $entityManager->persist($user2);
-
-        // Sauvegarder dans la base de données
-        $entityManager->flush();
-
-        // Retourner une réponse
         return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-            'message' => 'Les utilisateurs ont été créés avec succès.',
+            'users' => $userRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('user/new.html.twig', [
+            'user' => $user,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
+    public function show(User $user): Response
+    {
+        return $this->render('user/show.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'user' => $user,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
+    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($user);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('/profile', name: 'app_user_profile', methods: ['GET'])]
+    public function profile(UserRepository $userRepository, SessionInterface $session): Response
+    {
+        // Récupérer l'ID de l'utilisateur depuis la session
+        $userId = $session->get('user_id'); // Assurez-vous que 'user_id' est stocké dans la session lors de la connexion
+    
+        // Vérifier si l'ID existe dans la session
+        if (!$userId) {
+            return $this->redirectToRoute('app_login'); // Rediriger vers la page de connexion si l'ID est introuvable
+        }
+    
+        // Récupérer l'utilisateur depuis la base de données
+        $user = $userRepository->find($userId);
+    
+        // Vérifier si l'utilisateur existe
+        if (!$user) {
+            return $this->redirectToRoute('app_login'); // Rediriger vers la page de connexion si l'utilisateur n'existe pas
+        }
+    
+        // Afficher le profil de l'utilisateur
+        return $this->render('user/profile.html.twig', [
+            'user' => $user,
         ]);
     }
 }

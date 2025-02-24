@@ -8,6 +8,8 @@ use App\Entity\Activity;
 use App\Form\ActivityType;
 use App\Repository\ActivityRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +39,6 @@ final class ActivityController extends AbstractController{
 }
 
 
-
 #[Route('/new', name: 'app_activity_new', methods: ['GET', 'POST'])]
 public function new(Request $request, EntityManagerInterface $entityManager): Response
 {
@@ -46,19 +47,30 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-        // Gestion de l'image téléchargée
-        $imageFile = $form->get('imageFileName')->getData(); // Récupérer le fichier
+        // Gestion des images téléchargées (plusieurs fichiers)
+        $imageFiles = $form->get('imageFileName')->getData(); // Retourne un tableau d'objets UploadedFile
 
-        if ($imageFile) {
-            $newFilename = uniqid().'.'.$imageFile->guessExtension();
-            $imageFile->move(
-                $this->getParameter('upload_dir'),
-                $newFilename
-            );
-            $activity->setImageFileName($newFilename);
+        if ($imageFiles) {
+            $newFilenames = [];
+            foreach ($imageFiles as $imageFile) {
+                // Générer un nom de fichier unique pour chaque image
+                $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+                // Déplacer le fichier dans le dossier défini dans vos paramètres
+                $imageFile->move(
+                    $this->getParameter('upload_dir'),
+                    $newFilename
+                );
+                $newFilenames[] = $newFilename;
+            }
+            // Ici, vous avez deux options :
+            // 1. Stocker les noms de fichiers dans un champ sous forme de JSON
+            $activity->setImageFileName(json_encode($newFilenames));
+            
+            // 2. (Option recommandée) Créer une entité Image associée à Activity (OneToMany)
+            //    et y ajouter chaque image. Cela vous permettra de gérer plus proprement les images multiples.
         }
         
-        // Sauvegarder l'activité
+        // Sauvegarder l'entité Activity
         $entityManager->persist($activity);
         $entityManager->flush();
 
@@ -71,16 +83,27 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
     ]);
 }
 
+#[Route('/{id}', name: 'app_activity_show', methods: ['GET'])]
+    public function show(ActivityRepository $activityRepository, Request $request, PaginatorInterface $paginator): Response
+    {
+        // Construction de la requête pour récupérer les activités triées par date décroissante
+        $query = $activityRepository->createQueryBuilder('a')
+            ->orderBy('a.date', 'DESC')
+            ->getQuery();
 
-    #[Route('/{id}', name: 'app_activity_show', methods: ['GET'])]
-    public function show(ActivityRepository $activityRepository): Response
-    {        $activities = $activityRepository->findAll();
+        // Pagination : 7 activités par page
+        $activities = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            7
+        );
 
         return $this->render('activity/show.html.twig', [
             'activities' => $activities,
         ]);
-
     }
+
+
 
     #[Route('/{id}/edit', name: 'app_activity_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Activity $activity, EntityManagerInterface $entityManager): Response
@@ -114,7 +137,7 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
 
 
 
-    #[Route('/activity/{id}', name: 'app_activity_details')]
+   #[Route('/activity/{id}', name: 'app_activity_details')]
 public function details(
     ActivityRepository $activityRepository, 
     CommentaireRepository $commentaireRepository, 
@@ -146,12 +169,19 @@ public function details(
         return $this->redirectToRoute('app_activity_details', ['id' => $id]);
     }
 
+    // Extraction des images depuis le champ imageFileName (stocké en JSON)
+    $images = [];
+    if ($activity->getImageFileName()) {
+        $images = json_decode($activity->getImageFileName(), true);
+    }
+
     return $this->render('activity/details.html.twig', [
-        'activity' => $activity,
-        'commentaires' => $commentaires,
-        'form' => $form->createView(),
+        'activity'      => $activity,
+        'commentaires'  => $commentaires,
+        'form'          => $form->createView(),
+        'images'        => $images, // On passe la variable images au template
     ]);
 }
-    
+
 
 }

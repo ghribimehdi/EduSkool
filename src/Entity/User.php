@@ -1,219 +1,151 @@
 <?php
+
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'Il existe déjà un compte avec cet email')]
-class User implements UserInterface
+class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
+    #[Groups("user")]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private string $email;
+    #[ORM\Column(length: 255)]
+    #[Groups("user")]
+    private ?string $nom = null;
 
-    #[ORM\Column(type: 'json')]
-    private array $roles = [];
+    #[ORM\Column(length: 255)]
+    #[Groups("user")]
+    private ?string $prenom = null;
 
-    #[ORM\Column(type: 'string')]
-    private string $password;
+    #[ORM\Column(length: 255)]
+    #[Assert\Email(message: "Votre email n'est pas valide.")]
+    #[Groups("user")]
+    private ?string $email = null;
 
-    #[ORM\Column(type: 'string', length: 100)]
-    private string $lastname;
+    #[ORM\Column(length: 255)]
+    #[Assert\Regex(
+        pattern: '/^(?=.*[A-Z])(?=.*[0-9]).{8,}$/',
+        message: "Le mot de passe doit comporter au moins 8 caractères, dont au moins une lettre majuscule et un chiffre."
+    )]
+    private ?string $password = null;
 
-    #[ORM\Column(type: 'string', length: 100)]
-    private string $firstname;
+    #[Assert\EqualTo(
+        propertyPath: "password",
+        message: "Le mot de passe et la confirmation du mot de passe ne correspondent pas"
+    )]
+    private ?string $confirmPassword = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $address;
+    #[ORM\Column(length: 255)]
+    private ?string $roles = null;
 
-    #[ORM\Column(type: 'string', length: 5)]
-    private string $zipcode;
+    #[ORM\Column(type: "boolean")]
+    private ?bool $isVerified = false;
 
-    #[ORM\Column(type: 'string', length: 150)]
-    private string $city;
+    #[ORM\Column(nullable: true)]
+    private ?string $verificationCode = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $imageFileName = null;
-
-    #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $created_at;
-
-    // Relation avec Activity supprimée :
-    // #[ORM\OneToMany(mappedBy: 'enseignant', targetEntity: Activity::class)]
-    // private Collection $activities;
-
-    #[ORM\OneToMany(mappedBy: 'etudiant', targetEntity: Inscription::class)]
-    private Collection $inscriptions;
-
-    public function __construct()
+    public function getId(): ?int
     {
-        $this->created_at = new \DateTimeImmutable();
-        // $this->activities = new ArrayCollection(); // Ligne supprimée
-        $this->inscriptions = new ArrayCollection();
+        return $this->id;
     }
 
-    public function getId(): ?int 
-    { 
-        return $this->id; 
+    public function getNom(): ?string
+    {
+        return $this->nom;
     }
 
-    public function getEmail(): ?string 
-    { 
-        return $this->email; 
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom;
+        return $this;
     }
 
-    public function setEmail(string $email): self 
-    { 
-        $this->email = $email; 
-        return $this; 
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
     }
 
-    public function getUserIdentifier(): string 
-    { 
-        return (string) $this->email; 
+    public function setPrenom(string $prenom): self
+    {
+        $this->prenom = $prenom;
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+        return $this;
+    }
+
+    public function getConfirmPassword(): ?string
+    {
+        return $this->confirmPassword;
+    }
+
+    public function setConfirmPassword(string $confirmPassword): self
+    {
+        $this->confirmPassword = $confirmPassword;
+        return $this;
     }
 
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        $roles[] = 'ROLE_USER';
-        return array_unique($roles);
+        return $this->roles ? explode(',', $this->roles) : [];
     }
 
-    public function setRoles(array $roles): self 
-    { 
-        $this->roles = $roles; 
-        return $this; 
-    }
-
-    public function getPassword(): string 
-    { 
-        return $this->password; 
-    }
-
-    public function setPassword(string $password): self 
-    { 
-        $this->password = $password; 
-        return $this; 
-    }
-
-    public function eraseCredentials(): void 
-    {}
-
-    public function getLastname(): ?string 
-    { 
-        return $this->lastname; 
-    }
-
-    public function setLastname(string $lastname): self 
-    { 
-        $this->lastname = $lastname; 
-        return $this; 
-    }
-
-    public function getFirstname(): ?string 
-    { 
-        return $this->firstname; 
-    }
-
-    public function setFirstname(string $firstname): self 
-    { 
-        $this->firstname = $firstname; 
-        return $this; 
-    }
-
-    public function getAddress(): ?string 
-    { 
-        return $this->address; 
-    }
-
-    public function setAddress(string $address): self 
-    { 
-        $this->address = $address; 
-        return $this; 
-    }
-
-    public function getZipcode(): ?string 
-    { 
-        return $this->zipcode; 
-    }
-
-    public function setZipcode(string $zipcode): self 
-    { 
-        $this->zipcode = $zipcode; 
-        return $this; 
-    }
-
-    public function getCity(): ?string 
-    { 
-        return $this->city; 
-    }
-
-    public function setCity(string $city): self 
-    { 
-        $this->city = $city; 
-        return $this; 
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable 
-    { 
-        return $this->created_at; 
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setRoles(array $roles): self
     {
-        $this->created_at = $createdAt;
+        $this->roles = implode(',', $roles);
         return $this;
     }
 
-    public function getImageFileName(): ?string
+    public function isVerified(): ?bool
     {
-        return $this->imageFileName;
+        return $this->isVerified;
     }
 
-    public function setImageFileName(?string $imageFileName): static
+    public function setIsVerified(bool $isVerified): self
     {
-        $this->imageFileName = $imageFileName;
-
+        $this->isVerified = $isVerified;
         return $this;
     }
 
-    /**
-     * @return Collection<int, Inscription>
-     */
-    public function getInscriptions(): Collection
+    public function getVerificationCode(): ?string
     {
-        return $this->inscriptions;
+        return $this->verificationCode;
     }
 
-    public function addInscription(Inscription $inscription): static
+    public function setVerificationCode(?string $verificationCode): self
     {
-        if (!$this->inscriptions->contains($inscription)) {
-            $this->inscriptions->add($inscription);
-            $inscription->setEtudiant($this);
-        }
-
+        $this->verificationCode = $verificationCode;
         return $this;
     }
 
-    public function removeInscription(Inscription $inscription): static
+    public function getRole(): array
     {
-        if ($this->inscriptions->removeElement($inscription)) {
-            // set the owning side to null (unless already changed)
-            if ($inscription->getEtudiant() === $this) {
-                $inscription->setEtudiant(null);
-            }
-        }
-
-        return $this;
+        return ['ETUDIANT', 'ENSEIGNANT'];
     }
 }

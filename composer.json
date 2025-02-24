@@ -11,7 +11,9 @@
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/migrations": "^3.8",
         "doctrine/orm": "^3.3",
+        "knplabs/knp-paginator-bundle": "^6.6",
         "symfony/asset": "6.4.*",
+        "symfony/asset-mapper": "6.4.*",
         "symfony/console": "6.4.*",
         "symfony/dotenv": "6.4.*",
         "symfony/flex": "^2",
@@ -19,18 +21,26 @@
         "symfony/framework-bundle": "6.4.*",
         "symfony/http-client": "6.4.*",
         "symfony/mailer": "6.4.*",
+        "symfony/messenger": "6.4.*",
+        "symfony/monolog-bundle": "*",
+        "symfony/notifier": "6.4.*",
         "symfony/routing": "6.4.*",
         "symfony/runtime": "6.4.*",
         "symfony/security-bundle": "6.4.*",
         "symfony/security-csrf": "6.4.*",
+        "symfony/serializer": "6.4.*",
         "symfony/twig-bundle": "6.4.*",
         "symfony/ux-chartjs": "*",
+        "symfony/ux-turbo": "*",
         "symfony/validator": "6.4.*",
-        "symfony/yaml": "6.4.*"
+        "symfony/yaml": "6.4.*",
+        "twig/extra-bundle": "*"
     },
     "require-dev": {
         "symfony/contracts": "^3.5",
-        "symfony/maker-bundle": "^1.62"
+        "symfony/debug-bundle": "6.4.*",
+        "symfony/maker-bundle": "^1.62",
+        "symfony/web-profiler-bundle": "6.4.*"
     },
     "config": {
         "allow-plugins": {
@@ -62,7 +72,8 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "importmap:install": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"

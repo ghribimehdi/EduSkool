@@ -35,8 +35,13 @@ class CommentaireRepository extends ServiceEntityRepository
         return $averageNotes;
     }
     
+/**SELECT activity_id, ROUND(AVG(note)) AS avg_note FROM votes GROUP BY activity_id;
 
-    //    /**
+
+
+
+    //    
+
     //     * @return Commentaire[] Returns an array of Commentaire objects
     //     */
     //    public function findByExampleField($value): array
